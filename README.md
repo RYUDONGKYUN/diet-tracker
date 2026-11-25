@@ -59,6 +59,27 @@
 npm run dev
 ```
 
+## Tailscale 고정 주소로 접속하기 (마인드맵과 같은 PC에서 함께 쓰기)
+
+Cloudflare 퀵 터널은 재시작할 때마다 주소가 바뀝니다. Tailscale은 **PC 한 대 = 호스트 이름 하나**(`desktop-xxxx.tailXXXX.ts.net`)이고,
+앱은 **HTTPS 포트로 구분**합니다. 마인드맵이 443을 쓰고 있으므로 이 앱은 **8443**을 씁니다. 마인드맵 설정은 건드리지 않습니다.
+
+```
+diet-tailscale.bat              내 Tailscale 기기끼리만 접속 (권장 — 몸 사진이 들어 있음)
+diet-tailscale.bat -Funnel      인터넷 어디서나 접속 (주소 + APP_PASSWORD 만 알면 열림)
+diet-tailscale.bat -Off         이 앱의 매핑 제거
+```
+
+- 한 번 실행하면 재부팅 후에도 유지됩니다(`--bg`). 실행 후 주소가 화면에 나오고 클립보드에도 복사됩니다:
+  `https://<PC호스트이름>:8443`
+- 서버가 먼저 떠 있어야 합니다(`npm run build` → `npm run start`, 포트 4100). 터널 없이도 서버만 `start-diet-tracker.ps1` 로 띄워도 됩니다.
+- **Serve(기본)**: 폰에도 Tailscale 앱을 설치하고 같은 계정으로 로그인해야 열립니다.
+- **Funnel**: HTTPS 포트가 443·8443·10000 세 개만 허용됩니다. 공개 인터넷에 노출되므로 `APP_PASSWORD` 를 반드시 바꾸세요.
+- `server/.env` 의 `CLIENT_ORIGIN` 은 바꾸지 않아도 됩니다. 빌드된 서버는 화면과 API 가 같은 주소라 CORS 를 타지 않습니다
+  (`npm run dev` 의 5174 접속에서만 쓰입니다).
+- **절대 `tailscale serve reset` / `tailscale funnel reset` 을 쓰지 마세요.** 마인드맵을 포함한 모든 매핑이 지워집니다.
+- 스크립트는 `C:\Program Files\Tailscale\tailscale.exe` 를 쓰고, 없으면 PATH 의 `tailscale` 을 찾습니다. 포트를 바꾸려면 `-HttpsPort 10000` 처럼 넘기세요.
+
 ## 폰 홈 화면에 앱처럼 설치하기 (PWA)
 
 빌드된 버전(`npm run build`로 만든 프로덕션 서버, 즉 `start-diet-tracker.ps1`로 띄운 상태)에 접속하면

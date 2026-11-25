@@ -134,5 +134,6 @@ express-session의 SQLite 백엔드 스토어(로그인 세션 저장, 앱 재�
       dev 서버 실행 시 `PORT` 환경변수를 클라이언트 포트 값으로 자동 주입하는 경우가 있어,
       백엔드가 일반적인 `PORT`를 읽으면 클라이언트와 같은 포트로 바인딩되어 충돌한다 (`SERVER_PORT`로 회피함)
 - [ ] 외부 접속용 Cloudflare 터널 주소는 `tunnel.log`에서 확인 (마인드맵 앱과 동일한 방식, [start-diet-tracker.ps1](start-diet-tracker.ps1) 참고)
+- [ ] 고정 주소가 필요하면 Tailscale: `diet-tailscale.bat` (기본 Serve = 내 기기만, `-Funnel` = 공개). 같은 PC의 마인드맵(443)과는 HTTPS 포트(8443)로 구분한다. 근거·주의는 README "Tailscale 고정 주소" 절
 - [ ] PWA(홈 화면 설치)는 `npm run dev`가 아니라 **빌드된 프로덕션 서버**에서만 동작함 — 서비스워커(`sw.js`)/매니페스트는 `no-cache`로 서빙되도록 `server/src/index.ts`에서 예외 처리되어 있으니, 정적 파일 캐시 설정을 바꿀 때 이 부분을 건드리지 않도록 주의
 - [ ] Android(Capacitor) 앱을 실제로 동작시키려면 `client/capacitor.config.ts`의 `server.url`에 **고정** 백엔드 주소를 넣어야 함 — 비워두면 앱이 번들된 정적 파일만 로드하고 API 호출이 실패함. 코드를 고치고 나면 `npm run build && npx cap sync android`로 반드시 다시 동기화할 것
